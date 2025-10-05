@@ -2719,6 +2719,8 @@ CalHeatMap.prototype = {
   getMonthDomain: function (d, range) {
     'use strict';
 
+    d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
+
     var start = new Date(d.getFullYear(), d.getMonth());
     var stop = null;
     if (range instanceof Date) {
