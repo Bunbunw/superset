@@ -2716,19 +2716,40 @@ CalHeatMap.prototype = {
    * @param  int|date  range  Number of months in the range, or a stop date
    * @return array  An array of months
    */
+  // getMonthDomain: function (d, range) {
+  //   'use strict';
+
+  //   var start = new Date(d.getFullYear(), d.getMonth());
+  //   var stop = null;
+  //   if (range instanceof Date) {
+  //     stop = new Date(range.getFullYear(), range.getMonth());
+  //   } else {
+  //     stop = new Date(start);
+  //     stop = stop.setMonth(stop.getMonth() + range);
+  //   }
+
+  //   return d3.time.months(Math.min(start, stop), Math.max(start, stop));
+  // },
   getMonthDomain: function (d, range) {
     'use strict';
-
-    var start = new Date(d.getFullYear(), d.getMonth());
-    var stop = null;
-    if (range instanceof Date) {
-      stop = new Date(range.getFullYear(), range.getMonth());
-    } else {
-      stop = new Date(start);
-      stop = stop.setMonth(stop.getMonth() + range);
-    }
-
-    return d3.time.months(Math.min(start, stop), Math.max(start, stop));
+  console.log('###### Version 7');
+  console.log(d, range);
+  var start = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1));
+  var stopInclusive;
+  if (range instanceof Date) {
+    stopInclusive = new Date(Date.UTC(range.getUTCFullYear(), range.getUTCMonth(), 1));
+  } else {
+    stopInclusive = new Date(start);
+    stopInclusive.setUTCMonth(stopInclusive.getUTCMonth() + (range - 1));
+  }
+  // if (start >= stopInclusive) {
+  //   console.warn('Adjusting dates: start >= stopExclusive');
+  //   stopInclusive = new Date(start);
+  //   stopInclusive.setUTCMonth(stopInclusive.getUTCMonth() + 1);
+  // }
+  var stopExclusive = new Date(stopInclusive);
+  stopExclusive.setUTCMonth(stopExclusive.getUTCMonth() + 1);
+  return d3.time.months(start, stopExclusive);
   },
 
   /**
